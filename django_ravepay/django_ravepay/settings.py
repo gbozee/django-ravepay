@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ravepay',
+    'django_ravepay',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,7 @@ ROOT_URLCONF = 'django_ravepay.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,3 +120,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+# RAVEPAY_MODAL_TITLE="Communique Global Systems"
+# RAVEPAY_MODAL_LOGO = "http://localhost/communique-3/skin/frontend/ultimo/communique/custom/images/logo.svg"
+RAVEPAY_PUBLIC_KEY = os.getenv('RAVEPAY_PUBLIC_KEY','')
+RAVEPAY_SECRET_KEY = os.getenv('RAVEPAY_SECRET_KEY', '')
