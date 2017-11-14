@@ -1,0 +1,27 @@
+<form>
+  <script type="text/javascript" src="http://flw-pms-dev.eu-west-1.elasticbeanstalk.com/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+  <button id="{{button_id}}" class="{{button_class}}" type="button" style="cursor:pointer;" value="Pay Now" onclick="payWithRave()">Pay Now</button>
+</form>
+
+
+<script>
+  var params = JSON.parse('{{data|safe}}')
+  params = Object.assign(params, {
+    onclose: function () { },
+    callback: function (response) {
+      var flw_ref = response.tx.flwRef; // collect flwRef returned and pass to a 					server page to complete status check.
+      console.log("This is the response returned after a charge", response);
+      if (
+        response.tx.chargeResponse == "00" ||
+        response.tx.chargeResponse == "0"
+      ) {
+        window.location.href = "{{redirect_url}}&code=" + flw_ref
+      } else {
+        window.location.href = "{{redirect_url}}&code=" + flw_ref
+      }
+    }
+  });
+  function payWithRave() {
+    getpaidSetup(params);
+  }
+</script>
