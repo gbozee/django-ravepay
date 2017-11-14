@@ -6,7 +6,7 @@ from django import template
 from django.shortcuts import reverse
 from django.utils.crypto import get_random_string
 
-from ravepay import settings
+from .. import settings
 
 
 def sign_request(raw):
