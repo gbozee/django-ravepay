@@ -12,7 +12,6 @@ def verify_payment(request, order):
     amount = request.GET.get('amount')
     code = request.GET.get('code')
     RavepayAPI = load_lib()
-
     ravepay_instance = RavepayAPI()
     response = ravepay_instance.verify_payment(code, int(amount))
     if response[0]:

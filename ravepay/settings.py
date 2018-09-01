@@ -10,8 +10,8 @@ RAVEPAY_FAILED_URL = getattr(
     settings, 'RAVEPAY_FAILED_URL', 'ravepay:failed_page')
 RAVEPAY_SUCCESS_URL = getattr(
     settings, 'RAVEPAY_SUCCESS_URL', 'ravepay:success_page')
-TEST_RAVEPAY_API_URL = 'http://flw-pms-dev.eu-west-1.elasticbeanstalk.com/flwv3-pug/getpaidx'
-RAVEPAY_API_URL = 'https://api.ravepay.co'
+TEST_RAVEPAY_API_URL = 'https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx'
+RAVEPAY_API_URL = 'https://api.ravepay.co/flwv3-pug/getpaidx'
 RAVEPAY_MODAL_TITLE = getattr(
     settings, "RAVEPAY_MODAL_TITLE", os.getenv("RAVEPAY_MODAL_TITLE", "Test Account"))
 RAVEPAY_MODAL_LOGO = getattr(

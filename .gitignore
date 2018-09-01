@@ -102,3 +102,4 @@ ENV/
 .vscode/
 startup.sh
 *.sqlite3
+venv36/
