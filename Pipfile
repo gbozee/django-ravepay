@@ -10,7 +10,7 @@ name = "pypi"
 django = "*"
 future = "*"
 requests = "*"
-
+django_extensions = "*"
 
 [requires]
 python_version = "3.6"
