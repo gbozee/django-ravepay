@@ -40,6 +40,15 @@ RAVEPAY_PUBLIC_KEY=******,
 RAVEPAY_SECRET_KEY=******
 ```
 
+Also remember to register the webhook url **Ensure it is accessible over the network (You could use ngrok during development)**
+
+the webhook url consisti of the following `https://<Your domain>/ravepay/webhook/`
+
+The default hash used by the library is `DJANGO_RAVEPAY` but if it is changed, then in your `settings.py` you would need to register the following
+```
+RAVEPAY_WEBHOOK_HASH="DJANGO_RAVEPAY"
+```
+
 ![alt text](./docs/key.png)
 
 5. In the html where you want to insert the payment button

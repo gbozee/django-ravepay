@@ -201,3 +201,9 @@ class MockRequst(object):
         if self.overwrite:
             return self.response
         return {'data': self.response}
+
+
+# {'id': 236973, 'txRef': 'HVVHZ1YMSJIS', 'flwRef': 'FLW-MOCK-290b1f6a69a9be2bbb169ddacdafa142', 'orderRef': 'URF_1535879653950_3903335', 'paymentPlan': None, 'createdAt': '2018-09-02T09:14:13.000Z', 'amount': 100, 'charged_amount': 100, 'status': 'successful', 'IP': '197.210.65.21', 'currency': 'NGN', 'customer': {'id': 47452, 'phone': None, 'fullName': 'Anonymous
+# customer', 'customertoken': None, 'email': 'gbozee@example.com', 'createdAt': '2018-09-02T09:14:13.000Z', 'updatedAt': '2018-09-02T09:14:13.000Z', 'deletedAt': None, 'AccountId': 7392}, 'entity': {'card6': '543889', 'card_last4': '0229'}, 'event.type': 'CARD_TRANSACTION'}
+
+# {'id': 236975, 'txRef': 'HVVHZ1YMSJIS', 'flwRef': 'ACHG-1535880087754', 'orderRef': 'URF_1535880087003_7296735', 'paymentPlan': None, 'createdAt': '2018-09-02T09:21:27.000Z', 'amount': 100, 'charged_amount': 100, 'status': 'successful', 'IP': '197.210.65.21', 'currency': 'NGN', 'customer': {'id': 47453, 'phone': 'N/A', 'fullName': 'Anonymous customer', 'customertoken': None, 'email': 'gbozee@example.com', 'createdAt': '2018-09-02T09:21:26.000Z', 'updatedAt': '2018-09-02T09:21:26.000Z', 'deletedAt': None, 'AccountId': 7392}, 'entity': {'account_number': '0690000031', 'first_name': 'NO-NAME', 'last_name': 'NO-LNAME'}, 'event.type': 'ACCOUNT_TRANSACTION'}

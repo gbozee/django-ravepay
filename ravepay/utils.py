@@ -1,19 +1,20 @@
 import importlib
-
+import hmac
+import hashlib
 import requests
 
 from . import settings
 from django.conf import settings as dj_settings
 
 
-def get_js_script(debug=dj_settings.DEBUG):
+def get_js_script():
     RAVEPAY_TEST_JS_LIB = (
         "https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/flwpbf-inline.js"
     )
     RAVEPAY_LIVE_JS_LIB = (
         "https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"
     )
-    if debug:
+    if dj_settings.DEBUG:
         return RAVEPAY_TEST_JS_LIB
     return RAVEPAY_LIVE_JS_LIB
 
@@ -61,3 +62,10 @@ class RavepayAPI(object):
 def load_lib(config=settings.RAVEPAY_LIB_MODULE):
     module = importlib.import_module(config)
     return module.RavepayAPI
+
+
+def generate_digest(data):
+    return settings.RAVEPAY_WEBHOOK_HASH
+    # return hmac.new(
+    #     settings.RAVEPAY_SECRET_KEY.encode("utf-8"), msg=data, digestmod=hashlib.sha512
+    # ).hexdigest()  # request body hash digest

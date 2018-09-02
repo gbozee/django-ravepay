@@ -93,7 +93,7 @@ def ravepay_button(
         ref=new_ref,
     )
     return {
-        "js_url": get_js_script(False),
+        "js_url": get_js_script(),
         "data": json.dumps(params),
         "button_id": button_id,
         "button_class": button_class,
