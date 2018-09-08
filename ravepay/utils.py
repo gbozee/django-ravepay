@@ -45,7 +45,7 @@ class RavepayAPI(object):
         result = response.json()
         if response.status_code == 200 and result["status"] == "success":
             data = result["data"]
-            logger.info(f"Amount from paystack {data["amount"]}")
+            logger.info("Amount from paystack {}".format(data["amount"]))
             if data["amount"] == float(kwargs.get("amount")):
                 return True, "Verification Successful"
             return False, data["amount"]
