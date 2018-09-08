@@ -14,7 +14,7 @@ def verify_payment(request, order):
     code = request.GET.get("code")
     RavepayAPI = load_lib()
     ravepay_instance = RavepayAPI()
-    response = ravepay_instance.verify_payment(code, int(amount))
+    response = ravepay_instance.verify_payment(code, float(amount))
     if response[0]:
         payment_verified.send(sender=RavepayAPI, ref=order, amount=amount)
         return redirect(reverse("ravepay:successful_verification", args=[order]))
