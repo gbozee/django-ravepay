@@ -5,7 +5,9 @@ import requests
 
 from . import settings
 from django.conf import settings as dj_settings
+import logging
 
+logger = logging.getLogger(__name__)
 
 def get_js_script():
     RAVEPAY_TEST_JS_LIB = (
@@ -43,6 +45,7 @@ class RavepayAPI(object):
         result = response.json()
         if response.status_code == 200 and result["status"] == "success":
             data = result["data"]
+            logger.info(f"Amount from paystack {data["amount"]}")
             if data["amount"] == float(kwargs.get("amount")):
                 return True, "Verification Successful"
             return False, data["amount"]
