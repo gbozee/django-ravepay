@@ -74,7 +74,7 @@ def ravepay_button(
 ):
     new_ref = ref
     new_redirect_url = redirect_url
-    new_amount = int(amount)
+    new_amount = float(amount)
     if not new_ref:
         new_ref = get_random_string().upper()
     if not new_redirect_url:
