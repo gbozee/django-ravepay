@@ -32,8 +32,8 @@ def ravepay_api():
 @pytest.fixture
 def headers(ravepay_api: utils.RavepayAPI):
     return {
-        "Authorization": "Bearer {}".format(ravepay_api.secret_key),
-        "Content-Type": "application/json",
+        # "Authorization": "Bearer {}".format(ravepay_api.secret_key),
+        "content-type": "application/json"
     }
 
 
@@ -87,4 +87,3 @@ def mock_assertion(headers, ravepay_api: utils.RavepayAPI):
             mock_call.assert_called_once_with(url, headers=headers, **kwargs)
 
     return _mock_assertion
-

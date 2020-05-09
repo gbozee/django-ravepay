@@ -19,8 +19,11 @@ setup(
     author='Biola Oyeniyi',
     author_email='gbozee@gmail.com',
     install_requires=[
-        'requests', 'future'
+        "requests==2.23.0",
+        "Paperboy==1.0.1",
+        "python-dateutil==2.8.1",
     ],
+    # extras_require={"django": ["django>=2.0"], "starlette": ["starlette==0.12.13"]},
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
