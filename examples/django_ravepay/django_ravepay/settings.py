@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "ravepay",
+    "ravepay.frameworks.django",
     "django_ravepay",
     "django_extensions",
 ]
@@ -117,5 +118,6 @@ USE_TZ = True
 STATIC_URL = "/static/"
 # RAVEPAY_MODAL_TITLE="Communique Global Systems"
 # RAVEPAY_MODAL_LOGO = "http://localhost/communique-3/skin/frontend/ultimo/communique/custom/images/logo.svg"
-RAVEPAY_PUBLIC_KEY = os.getenv("RAVEPAY_PUBLIC_KEY", "")
-RAVEPAY_SECRET_KEY = os.getenv("RAVEPAY_SECRET_KEY", "")
+RAVEPAY_PUBLIC_KEY = os.environ["RAVEPAY_PUBLIC_KEY"]
+RAVEPAY_SECRET_KEY = os.environ["RAVEPAY_SECRET_KEY"]
+RAVEPAY_WEBHOOK_DOMAIN = "tuteria.ngrok.io"

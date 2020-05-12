@@ -13,12 +13,44 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+import django
 from django.contrib import admin
 from django.views.generic import TemplateView
-urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='sample.html'), name='home'),
+from dispatch import receiver
+from ravepay.api import signals
 
-    url(r'^admin/', admin.site.urls),
-    url(r'^ravepay/', include('ravepay.urls', namespace='ravepay'))
+
+version = django.get_version().split(".")
+if int(version[0]) >= 2:
+    from django.urls import re_path as url, include
+else:
+    from django.conf.urls import url
+    from django.conf.urls import url, include
+
+
+@receiver(signals.successful_payment_signal)
+def on_successful_payment(sender, **kwargs):
+    import pdb
+
+    pdb.set_trace()
+    pass
+
+
+if int(version[0]) > 1:
+    ravepay_route = url(
+        "^ravepay/",
+        include(("ravepay.frameworks.django.urls", "ravepay"), namespace="ravepay"),
+    )
+else:
+    ravepay_route = (
+        url(
+            r"^ravepay/", include("ravepay.frameworks.django.urls", namespace="ravepay")
+        ),
+    )
+
+
+urlpatterns = [
+    url(r"^$", TemplateView.as_view(template_name="sample.html"), name="home"),
+    url(r"^admin/", admin.site.urls),
+    ravepay_route,
 ]

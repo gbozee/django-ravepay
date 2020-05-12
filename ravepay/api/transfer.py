@@ -79,14 +79,13 @@ class Transfer(BaseClass):
         result = self.make_request(
             "POST", path, json={"currency": currency.upper(), "seckey": self.secret_key}
         )
-
-        data = result.json()
-        if data["status"] != "success":
+        data = self.result_format(result)
+        if not data[0]:
             raise RavepayException("Invalid Key sent.")
-        return [
-            {"currency": x["ShortName"], "balance": x["AvailableBalance"]}
-            for x in data.get("data")
-        ]
+        return {
+            "currency": data[2]["ShortName"],
+            "balance": data[2]["AvailableBalance"],
+        }
 
     def get_transfer(self, transfer_id):
         """Fetch the transfer for a given recipient"""
@@ -97,17 +96,32 @@ class Transfer(BaseClass):
             if found:
                 return found[0]
 
-    def get_all_transfers(self):
+    def get_all_transfers(self, **kwargs):
         path = self.build_path("/transfers")
-        req = self.make_request("GET", path, params={"seckey": self.secret_key})
+        req = self.make_request(
+            "GET", path, params={"seckey": self.secret_key, **kwargs}
+        )
         return self.result_format(req)
 
-    def bulk_transfer(self, array_of_recipient_with_amount, reason="",country="ng"):
+    def bulk_transfer(self, array_of_recipient_with_amount, reason=""):
         transform = [
-            {"Amount": x["amount"], "Recipient": x["recipient"],'currency','Narration':reason,}
+            {
+                "Amount": x["amount"],
+                "Bank": x["bank_code"],
+                "Account Number": x["account_no"],
+                "Currency": x["currency"].upper(),
+                "Narration": reason,
+            }
             for x in array_of_recipient_with_amount
         ]
         path = self.build_path("/transfers/create_bulk")
-        json_data = {"currency": "NGN", "source": "balance", "transfers": transform}
+        json_data = {"seckey": self.secret_key, "title": reason, "bulk_data": transform}
         req = self.make_request("POST", path, json=json_data)
-        return self.result_format(req, lambda x: (x["status"], x["message"]))
+        result = self.result_format(req)
+        if result[0]:
+            _id = result[2]["id"]
+            transfer_result = self.get_all_transfers(batch_id=_id)
+            if transfer_result[0]:
+                if transfer_result[2]["transfers"]:
+                    return True, "Bulk successful", transfer_result[2]["transfers"][0]
+        return False, "Failed Bulk Transfer"

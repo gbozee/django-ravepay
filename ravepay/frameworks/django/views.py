@@ -4,9 +4,11 @@ from django.utils import timezone
 from django.views.generic import RedirectView, TemplateView
 import json
 from django.http import JsonResponse
-from . import settings, utils, signals
-from .signals import payment_verified
-from .utils import load_lib
+from . import settings
+from ravepay import utils
+from ravepay.api import signals
+from ravepay.api.signals import payment_verified
+from ravepay.utils import load_lib
 
 
 def verify_payment(request, order):
@@ -19,6 +21,20 @@ def verify_payment(request, order):
         payment_verified.send(sender=RavepayAPI, ref=order, amount=amount)
         return redirect(reverse("ravepay:successful_verification", args=[order]))
     return redirect(reverse("ravepay:failed_verification", args=[order]))
+
+
+def success_redirect_view(request, order_id):
+    url = settings.RAVEPAY_SUCCESS_URL
+    if url == "ravepay:success_page":
+        url = reverse(url)
+    return redirect(url, permanent=True)
+
+
+def failure_redirect_view(request, order_id):
+    url = settings.RAVEPAY_FAILED_URL
+    if url == "ravepay:failed_page":
+        url = reverse(url)
+    return redirect(url, permanent=True)
 
 
 class FailedView(RedirectView):
@@ -41,11 +57,14 @@ class SuccessView(RedirectView):
 
 def webhook_view(request):
     # ensure that all parameters are in the bytes representation
-    digest = utils.generate_digest(request.body)
+    RavepayAPI = load_lib()
+    ravepay_instance = RavepayAPI()
     signature = request.META["HTTP_VERIF_HASH"]
-    if digest == signature:
-        payload = json.loads(request.body)
-        signals.event_signal.send(
-            sender=request, event=payload["event.type"], data=payload
-        )
+    ravepay_instance.webhook_api.verify(signature, request.body, full_auth=True)
+    # digest = utils.generate_digest(request.body)
+    # if digest == signature:
+    #     payload = json.loads(request.body)
+    #     signals.event_signal.send(
+    #         sender=request, event=payload["event.type"], data=payload
+    #     )
     return JsonResponse({"status": "Success"})

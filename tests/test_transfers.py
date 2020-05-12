@@ -87,7 +87,7 @@ def test_initial_transfer_success(
             "fee": 10.75,
             "status": "NEW",
             "reference": "a1f12d9ff3569915",
-            "meta": null,
+            "meta": None,
             "narration": "Payment of x services",
             "complete_message": "",
             "requires_approval": 0,
@@ -106,7 +106,7 @@ def test_initial_transfer_success(
                     "account_number": "0690000031",
                     "bank_code": "044",
                     "fullname": "Forrest Green",
-                    "meta": null,
+                    "meta": None,
                     "date_created": "2020-05-08T20:57:11.000Z",
                     "bank_name": "ACCESS BANK NIGERIA",
                 }
@@ -181,14 +181,14 @@ def test_transfer_bulk_success(
                     "fullname": "Pastor Bright",
                     "date_created": "2020-05-09T06:23:22.000Z",
                     "currency": "NGN",
-                    "debit_currency": null,
+                    "debit_currency": None,
                     "amount": 11.5,
                     "fee": 10.75,
                     "status": "SUCCESSFUL",
                     "reference": "09ea9d5f2cde9200_PMCKDU_5",
-                    "meta": null,
+                    "meta": None,
                     "narration": "Bulk transfer 1",
-                    "approver": null,
+                    "approver": None,
                     "complete_message": "Successful",
                     "requires_approval": 0,
                     "is_approved": 1,
@@ -200,14 +200,29 @@ def test_transfer_bulk_success(
     mock_get = get_request(bulk_result, status_code=200)
     mock_post = post_request(result, status_code=200)
     response = ravepay_api.transfer_api.bulk_transfer(
-        [{"amount": 200, "account_no": "0000323232", "bank": "044"}],
+        [
+            {
+                "amount": 200,
+                "account_no": "0000323232",
+                "currency": "ngn",
+                "bank_code": "044",
+            }
+        ],
         reason="March Salary",
     )
     mock_assertion(
         mock_post,
         "/v2/gpx/transfers/create_bulk",
         json={
-            "bulk_data": [{"Bank": "044", "Account Number": "0690000031"}],
+            "bulk_data": [
+                {
+                    "Bank": "044",
+                    "Account Number": "0000323232",
+                    "Amount": 200,
+                    "Currency": "NGN",
+                    "Narration": "March Salary",
+                }
+            ],
             "title": "March Salary",
             "seckey": ravepay_api.secret_key,
         },
@@ -218,8 +233,8 @@ def test_transfer_bulk_success(
         params={"seckey": ravepay_api.secret_key, "batch_id": 2783},
     )
     assert response[0]
-    assert response[1] == "Successful Transfer"
-    assert response[2] == bulk_result["data"]["transfers"]
+    assert response[1] == "Bulk successful"
+    assert response[2] == bulk_result["data"]["transfers"][0]
 
 
 def test_transfer_bulk_failed(
@@ -245,14 +260,29 @@ def test_transfer_bulk_failed(
     mock_get = get_request(bulk_result, status_code=200)
     mock_post = post_request(result, status_code=200)
     response = ravepay_api.transfer_api.bulk_transfer(
-        [{"amount": 200, "account_no": "0000323232", "bank": "044"}],
+        [
+            {
+                "amount": 200,
+                "account_no": "0000323232",
+                "currency": "ngn",
+                "bank_code": "044",
+            }
+        ],
         reason="March Salary",
     )
     mock_assertion(
         mock_post,
         "/v2/gpx/transfers/create_bulk",
         json={
-            "bulk_data": [{"Bank": "044", "Account Number": "0690000031"}],
+            "bulk_data": [
+                {
+                    "Bank": "044",
+                    "Account Number": "0000323232",
+                    "Amount": 200,
+                    "Currency": "NGN",
+                    "Narration": "March Salary",
+                }
+            ],
             "title": "March Salary",
             "seckey": ravepay_api.secret_key,
         },
@@ -263,7 +293,7 @@ def test_transfer_bulk_failed(
         params={"seckey": ravepay_api.secret_key, "batch_id": 2783},
     )
     assert not response[0]
-    assert response[1] == "Failed Transfer"
+    assert response[1] == "Failed Bulk Transfer"
 
 
 def test_get_balance(
@@ -292,4 +322,44 @@ def test_get_balance(
 def test_get_banks(
     mock_assertion, post_request, get_request, ravepay_api: utils.RavepayAPI
 ):
-    pass
+    result = {
+        "status": "success",
+        "message": "SUCCESS",
+        "data": {
+            "Banks": [
+                {
+                    "Id": 132,
+                    "Code": "560",
+                    "Name": "Page MFBank",
+                    "IsMobileVerified": None,
+                    "branches": None,
+                },
+                {
+                    "Id": 133,
+                    "Code": "304",
+                    "Name": "Stanbic Mobile Money",
+                    "IsMobileVerified": None,
+                    "branches": None,
+                },
+            ],
+            "Token": {
+                "access_token": None,
+                "refresh_token": None,
+                "token_type": None,
+                "expires_in": 0,
+            },
+            "Status": "Success",
+            "Message": "successul",
+            "Data": None,
+            "AllTransactions": None,
+        },
+    }
+    mock_get = get_request(result, status_code=200)
+    response = ravepay_api.transfer_api.get_banks(country="gh")
+    mock_assertion(
+        mock_get, "/v2/banks/GH", params={"public_key": ravepay_api.public_key}
+    )
+    assert response[0]
+    assert response[1] == result["message"]
+    assert response[2] == result["data"]
+

@@ -1,4 +1,11 @@
-from django.conf.urls import url
+import django
+
+version = django.get_version().split(".")
+if int(version[0]) >= 2:
+    from django.urls import re_path as url
+else:
+    from django.conf.urls import url
+
 from . import settings, views
 from django.views.decorators.csrf import csrf_exempt
 
@@ -10,12 +17,12 @@ urlpatterns = [
     ),
     url(
         r"^failed-verification/(?P<order_id>[\w.@+-]+)/$",
-        views.FailedView.as_view(),
+        views.failure_redirect_view,
         name="failed_verification",
     ),
     url(
         r"^successful-verification/(?P<order_id>[\w.@+-]+)/$",
-        views.SuccessView.as_view(),
+        views.success_redirect_view,
         name="successful_verification",
     ),
     url(
