@@ -58,7 +58,11 @@ def verify_payment(
         signals.payment_verified.send(
             sender=RavepayAPI, ref=txrf, amount=amount, order=order
         )
-    return response_callback(response[0], order=order)
+    if response_callback:
+        return response_callback(response[0], order=order)
+    if response[0]:
+        return JSONResponse({"status": True, "data": response[1]})
+    return JSONResponse({"status": False, "msg": response[1]})
 
 
 async def webhook_view(request: Request, background_action=None, **kwargs):
