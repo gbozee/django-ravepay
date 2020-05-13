@@ -118,6 +118,28 @@ class Transaction(BaseClass):
 
         return self.result_format(response)
 
+    def build_transaction_obj(self,currency="ngn", **kwargs):
+        json_data = {
+            "txref": kwargs.get('reference') or kwargs.get('order'),
+            "amount": float("%2f" % kwargs["amount"]),
+            "redirect_url": kwargs["callback_url"],
+            "currency": currency.upper(),
+            "PBFPubKey": self.public_key,
+        }
+        json_data = update_obj(
+            json_data,
+            kwargs,
+            ["first_name", "last_name", "phone", "email"],
+            key="customer",
+        )
+        json_data = update_obj(
+            json_data, kwargs, ["title", "description", "logo"], key="custom"
+        )
+        if kwargs.get('items'):
+            json_data['meta'] = [{"metaname":x,"metavalue":y} for x,y in items.items()]
+        return json_data
+
+
     def get_customer_and_auth_details(self, data):
         if data["status"] == "successful":
             customer = {

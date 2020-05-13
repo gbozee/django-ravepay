@@ -79,6 +79,9 @@ class RavepayAPI(object):
             "redirect_url": redirect_url,
         }
 
+    def other_payment_info(self, **kwargs):
+        return self.transaction_api.build_transaction_obj(**kwargs)
+
 
 def load_lib(config=None):
     from ravepay.frameworks.django import settings
