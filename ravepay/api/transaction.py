@@ -136,7 +136,7 @@ class Transaction(BaseClass):
             json_data, kwargs, ["title", "description", "logo"], key="custom"
         )
         if kwargs.get('items'):
-            json_data['meta'] = [{"metaname":x,"metavalue":y} for x,y in items.items()]
+            json_data['meta'] = [{"metaname":x,"metavalue":y} for x,y in kwargs['items'].items()]
         return json_data
 
 
