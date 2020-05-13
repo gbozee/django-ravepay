@@ -196,10 +196,10 @@ def update_obj(old_data, kwargs, fields, key="", required=False):
     json_data = {**old_data}
     if required:
         assert set(list(kwargs.keys())).intersection(set(fields)) == set(fields)
-    for key, value in kwargs.items():
-        if key.lower() in fields:
-            merge = key.replace("_", "").lower()
-            key_obj = key
+    for xkey, value in kwargs.items():
+        if xkey.lower() in fields:
+            merge = xkey.replace("_", "").lower()
+            key_obj =xkey
             if key:
                 key_obj = "{}_{}".format(key, merge)
             json_data.update({key_obj: str(value)})
