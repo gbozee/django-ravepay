@@ -80,15 +80,18 @@ def build_app(
     response_callback=None,
     post_webhook_processing=None,
     _app: Starlette = None,
+    instance=None,
     debug=False,
 ):
-    ravepay_instance = RavepayAPI(
-        public_key=str(RAVEPAY_PUBLIC_KEY),
-        secret_key=str(RAVEPAY_SECRET_KEY),
-        test=debug,
-        django=False,
-        webhook_hash=str(RAVEPAY_WEBHOOK_HASH),
-    )
+    ravepay_instance = instance 
+    if not ravepay_instance:
+        ravepay_instance = RavepayAPI(
+            public_key=str(RAVEPAY_PUBLIC_KEY),
+            secret_key=str(RAVEPAY_SECRET_KEY),
+            test=debug,
+            django=False,
+            webhook_hash=str(RAVEPAY_WEBHOOK_HASH),
+        )
     if _app:
         app = _app
     else:
