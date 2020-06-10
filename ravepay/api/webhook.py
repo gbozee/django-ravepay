@@ -39,6 +39,10 @@ class Webhook:
             ]:
                 kwargs["data"] = charge_data(payload, full_auth=full_auth, full=full)
                 kwargs["payment_type"] = payload.get("event.type")
+            if not payload.get('event.type'):
+                # this is a payment from bank transfer
+                kwargs['data'] = payload 
+                kwargs['payment_type'] = 'BANK_TRANSFER_TRANSACTION'
             if use_default:
                 signal_func = signals.event_signal
             else:
