@@ -52,4 +52,8 @@ class Webhook:
                 except KeyError:
                     signal_func = signals.event_signal
             signal_func.send(sender=self, **kwargs)
-            return payload["event.type"], kwargs
+            try:
+                event = payload['event.type']
+            except KeyError:
+                event = None
+            return event, kwargs
