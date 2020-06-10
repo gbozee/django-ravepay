@@ -32,13 +32,13 @@ class Webhook:
     ):
         if unique_code == self.webhook_has:
             payload = json.loads(request_body)
-            if payload["event.type"] in [
+            if payload.get("event.type") in [
                 "CARD_TRANSACTION",
                 "BANK_TRANSFER_TRANSACTION",
                 "ACCOUNT_TRANSACTION",
             ]:
                 kwargs["data"] = charge_data(payload, full_auth=full_auth, full=full)
-                kwargs["payment_type"] = payload["event.type"]
+                kwargs["payment_type"] = payload.get("event.type")
             if use_default:
                 signal_func = signals.event_signal
             else:
